@@ -145,7 +145,7 @@ async function main() {
         ['view', `${pkgName}@~${canaryVersion}`, 'version', '--json'],
         { stdio: 'pipe' },
       )
-      let versions = JSON.parse(stdout)
+      let versions = JSON.parse(/** @type {string} */ (stdout))
       versions = Array.isArray(versions) ? versions : [versions]
       const latestSameDayPatch = /** @type {string} */ (
         semver.maxSatisfying(versions, `~${canaryVersion}`)
@@ -354,7 +354,7 @@ async function getCIResult() {
     )
     const data = await res.json()
     return data.workflow_runs.length > 0
-  } catch (e) {
+  } catch {
     console.error('Failed to get CI status for current commit.')
     return false
   }
@@ -380,7 +380,7 @@ async function isInSyncWithRemote() {
       })
       return yes
     }
-  } catch (e) {
+  } catch {
     console.error(
       pico.red('Failed to check whether local HEAD is up-to-date with remote.'),
     )
